@@ -1,4 +1,5 @@
-from repository.database import db
+from config.database import db
+
 
 class Payment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -10,10 +11,10 @@ class Payment(db.Model):
 
     def to_dict(self):
         return {
-            "id":self.id,
-            "value": self.value,
-            "paid": self.paid,
-            "bank_payment_id": self.bank_payment_id,
-            "qr_code": self.qr_code,
-            "expiration_date": self.expiration_date,
+            'id': self.id,
+            'value': self.value,
+            'paid': self.paid,
+            'bank_payment_id': self.bank_payment_id,
+            'qr_code': self.qr_code,
+            'expiration_date': self.expiration_date,
         }

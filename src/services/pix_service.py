@@ -1,11 +1,11 @@
 import uuid
+
 import qrcode
 
-class Pix:
-    def __init__(self):
-        pass
 
-    def create_payment(self):
+class PixService:
+    @staticmethod
+    def create_payment():
         bank_payment_id = str(uuid.uuid4())
         hash_payment = f'bank_payment_{bank_payment_id}'
 
