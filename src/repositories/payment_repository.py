@@ -1,5 +1,5 @@
-from config.database import db
-from models.payment import Payment
+from src.config.database import db
+from src.models.payment import Payment
 
 
 class PaymentRepository:

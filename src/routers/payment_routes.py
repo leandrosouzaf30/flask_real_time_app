@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, render_template, request, send_file
 
-from models.payment import Payment
-from services.payment_service import PaymentService
+from src.models.payment import Payment
+from src.services.payment_service import PaymentService
 
 payment_bp = Blueprint('payment_bp', __name__)
 

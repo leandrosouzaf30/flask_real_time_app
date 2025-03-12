@@ -1,4 +1,4 @@
-from config.database import db
+from src.config.database import db
 
 
 class Payment(db.Model):

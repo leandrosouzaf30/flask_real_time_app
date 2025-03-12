@@ -1,13 +1,13 @@
 from flask import Flask
 from flask_socketio import SocketIO
 
-from config.database import db
+from src.config.database import db
 
 socketio = SocketIO(cors_allowed_origins="*")
 
 
 def create_app():
-    from routers.payment_routes import payment_bp
+    from src.routers.payment_routes import payment_bp
     app = Flask(__name__, template_folder="templates")
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 
-from app_factory import socketio
-from models.payment import Payment
-from repositories.payment_repository import PaymentRepository
+from ..app_factory import socketio
+from src.models.payment import Payment
+from src.repositories.payment_repository import PaymentRepository
 
 from .pix_service import PixService
 
