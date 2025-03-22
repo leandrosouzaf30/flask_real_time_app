@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: real-time-app
+  name: real-time-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: real-time-app
+  template:
+    metadata:
+      labels:
+        app: real-time-app
+    spec:
+      containers:
+      - image: real-time-app:latest
+        name: real-time-app
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: FLASK_APP
+            value: src/app.py
+          - name: FLASK_RUN_HOST
+            value: 0.0.0.0
+          
+        livenessProbe:
+          httpGet: 
+            path: /health
+            port: 5000
+        # readinessProbe:
+        #   httpGet: 
+        #     path: /health
+        #     port: 5000
+        

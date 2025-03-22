@@ -5,6 +5,9 @@ from src.services.payment_service import PaymentService
 
 payment_bp = Blueprint('payment_bp', __name__)
 
+@ayment_bp.route("/health", methods=["GET"])
+    def health():
+        return jsonify({"status": "ok"}), 200  # Certifique-se de retornar 200
 
 @payment_bp.route('/payments/pix', methods=['POST'])
 def create_payment_pix():
