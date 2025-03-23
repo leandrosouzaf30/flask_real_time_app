@@ -1,4 +1,6 @@
-setup_dev:
+APP = real-time-app
+
+setup-dev:
 	@kind create cluster --config k8s/config/config.yaml
 	@kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
 	@kubectl wait --namespace ingress-nginx \
@@ -8,3 +10,13 @@ setup_dev:
 
 teardown_dev:
 	@kind delete clusters kind
+
+deploy-dev:
+	# @docker build -t $(APP):latest .
+	# @kind load docker-image $(APP):latest
+	@kubectl apply -f k8s/manifests
+	@kubectl rollout restart deploy real-time-app
+
+dev: setup-dev deploy-dev
+
+
