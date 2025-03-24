@@ -11,6 +11,10 @@ Aplicação Flask para pagamentos via PIX em tempo real, utilizando WebSockets.
 - SQLite
 - Jinja2 (templates)
 - qrcode (geração de QR Code)
+- Docker
+- Kubernetes
+- Kind
+- Ingress NGINX
 
 ## 📥 Instalação
 
@@ -102,10 +106,58 @@ Aplicação Flask para pagamentos via PIX em tempo real, utilizando WebSockets.
 ## WebSocket: Atualiza o status do pagamento em tempo real.
 A aplicacao utiliza WebSockets para atualizar o status do pagamento em tempo real. Assim que o pagamento for confirmado, os usuarios recebem a atualizacao instantaneamente na interface.
 
+## Configurações Kubernetes
+Estrutura
+   ```
+   - k8s/
+      config/
+         config.yaml
+      manifest/
+         deployment.yaml
+         service.yaml
+         ingress.yaml
+   
+   ```
+Arquivos
+
+   * config.yaml: Configuração do cluster Kubernetes utilizando kind.
+   * deployment.yaml: Manifesto do Deployment para a aplicação.
+   * service.yaml: Configuração do Service para expor a aplicação dentro do cluster.
+   * ingress.yaml: Regras de Ingress para expor a aplicação externamente. 
+
+Configuração e Deploy
+
+1. Criar o Cluster Kubernetes com kind
+Certifique-se de ter o kind instalado e execute o seguinte comando, ver documentação [kind](https://kind.sigs.k8s.io/). 
+```bash
+kind create cluster --config=k8s/config/config.yaml
+kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
+kubectl wait --namespace ingress-nginx \
+	--for=condition=ready pod \
+	--selector=app.kubernetes.io/component=controller \
+	--timeout=270s
+```
+2. Realizar build da imagem Docker
+```bash
+docker build -t <imagem>:latest .
+kind load docker-image <imagem>:latest #Esse passo será necessário caso sua imagem esteja local
+```
+3. Aplicar os Manifestos do Kubernetes
+```bash
+kubectl apply -f  k8s/manifest/deployment.yaml
+kubectl apply -f  k8s/manifest/service.yaml
+kubectl apply -f  k8s/manifest/ingress.yaml 
+```
+4. Testar a Aplicação
+Após a configuração, a aplicação estará disponível no domínio api.localhost.com.
+   * Agora, a aplicação pode ser acessada via:
+   ```bash
+   curl localhost/hello -H "Host: api.localhost.com" 
+   ```
 ## 📌 Melhorias Futuras
- Banco de dados PostgreSQL e MongoDB
- Integração com API de pagamentos
+   * Banco de dados PostgreSQL e MongoDB
+   * Integração com API de pagamentos
 
 ## 📌 Autor: Leandro Souza
-📧 leandrosouzaf30@gmail.com | 
-🚀 LinkedIn: linkedin.com/in/fleandrosouza
+   * 📧 leandrosouzaf30@gmail.com 
+   * 🚀 Linkedin: [fleandrosouza](linkedin.com/in/fleandrosouza)
