@@ -1,0 +1,9 @@
+.git/
+.github/
+Dockerfile
+LICENSE
+README.md
+data/
+docker-compose.yml
+docs/
+mkdocs.yml
