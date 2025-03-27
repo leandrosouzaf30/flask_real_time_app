@@ -9,10 +9,6 @@ payment_bp = Blueprint('payment_bp', __name__)
 def health():
     return jsonify({"status": "ok"}), 200
 
-@payment_bp.route("/hello", methods=["GET"])
-def hello_app():
-    return jsonify({"message": "Hello"}), 200
-
 @payment_bp.route('/payments/pix', methods=['POST'])
 def create_payment_pix():
     data = request.get_json()
