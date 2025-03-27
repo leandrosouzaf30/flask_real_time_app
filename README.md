@@ -125,7 +125,7 @@ Arquivos
    * service.yaml: Configuração do Service para expor a aplicação dentro do cluster.
    * ingress.yaml: Regras de Ingress para expor a aplicação externamente. 
 
-Configuração e Deploy
+Configuração ambiente de desenvolvimento
 
 1. Criar o Cluster Kubernetes com kind
 Certifique-se de ter o kind instalado e execute o seguinte comando, ver documentação [kind](https://kind.sigs.k8s.io/). 
@@ -154,6 +154,74 @@ Após a configuração, a aplicação estará disponível no domínio api.localh
    ```bash
    curl localhost/hello -H "Host: api.localhost.com" 
    ```
+
+## Deploy
+   1. Criar um novo pipeline no Azure DevOps
+      * Acesse o Azure DevOps (https://dev.azure.com/).
+
+      * Selecione seu projeto ou crie um novo.
+
+      * Vá para Pipelines > New pipeline.
+
+      * Escolha a opção GitHub.
+
+      * Autorize o Azure DevOps a acessar seu repositório do GitHub.
+
+      * Selecione o repositório onde está seu código.
+
+   2. Criar o arquivo de pipeline (azure-pipelines.yml)
+      * Dentro do repositório no GitHub, crie um arquivo chamado azure-pipelines.yml na raiz do projeto com o seguinte conteúdo:
+
+      * Pipeline para Build e Push da Imagem Docker
+      ```bash
+      trigger:
+      - main
+
+      resources:
+      - repo: self
+
+      variables:
+      tag: '$(Build.BuildId)'
+      azureSubscription: ''  # Substitua pelo nome correto da sua conexão de serviço
+      appName: ''  # Nome do seu Azure App Service
+      imageName: '$(Build.SourcesDirectory)/Dockerfile'  # Caminho para o seu Dockerfile
+
+      stages:
+      - stage: Build
+      displayName: Build image
+      jobs:
+      - job: Build
+         displayName: Build
+         pool:
+            vmImage: ubuntu-latest
+         steps:
+         - task: Docker@2
+            displayName: Build Docker image
+            inputs:
+            command: build
+            dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+            tags: |
+               $(tag)
+
+      - stage: Deploy
+      displayName: Deploy to Azure
+      jobs:
+      - job: Deploy
+         displayName: Deploy
+         pool:
+            vmImage: ubuntu-latest
+         steps:
+         - task: Docker@2  # Corrigido para a versão 2 do task AzureWebAppContainer
+            displayName: Deploy Docker container to Azure App Service
+            inputs:
+            azureSubscription: $(azureSubscription)  # Nome da conexão de serviço
+            appName: $(appName)  # Nome do seu App Service
+            imageName: $(tag)  # Nome da imagem que foi construída
+            isMultiContainer: false  # Se for um container único, defina como false
+
+      ```
+      * Agora todo push para a branch "main" ou para a branch que indicar sera rodado o pipeline.
+
 ## 📌 Melhorias Futuras
    * Banco de dados PostgreSQL e MongoDB
    * Integração com API de pagamentos
