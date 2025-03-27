@@ -6,7 +6,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
-  azureSubscription: '64a76ca7-6de2-4427-9e55-12e3b2cdcbc5'  # Substitua pelo nome correto da sua conexão de serviço
+  azureSubscription: '$($(azureSubscription)'  # Substitua pelo nome correto da sua conexão de serviço
   appName: 'task-appservice'  # Nome do seu Azure App Service
   imageName: '$(Build.SourcesDirectory)/Dockerfile'  # Caminho para o seu Dockerfile
 
